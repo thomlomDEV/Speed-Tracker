@@ -1,0 +1,130 @@
+/* Just some base styles not needed for example to function */
+*, html { font-family: Arial, Helvetica, sans-serif; -webkit-user-select: none; -webkit-touch-callout: none; }
+
+body, form, ul, li, p, h1, h2, h3, h4, h5
+{
+	margin: 0;
+	padding: 0;
+}
+body { background-color: #010101; color: #ffffff; }
+img { border: none; }
+p
+{
+	font-size: 1em;
+	margin: 0 0 1em 0;
+}
+	
+/* Speedo */
+#info 
+{
+	height: 406px;
+	padding: 20px 20px;
+}
+	h1 { margin: 0 0 0.5em; text-align: center; }
+	#info img { display: block; margin: 0 0 1em; }
+	#info p { font-size: 20px; }
+
+#speedo
+{
+	background: url(gr_speedo.jpg) 50% 0 no-repeat;
+	width: 351px;
+	height: 268px;
+	margin: 20px auto 0;
+	position: relative;
+}
+	.slow #speedo { background-position: 50% -310px; }
+	#speed { text-align: center; position: relative; }
+	#mode,
+	#metric 	
+	{ 
+		position: absolute; 
+		top: 0; 
+		right: 0;
+		font-size: 12px;
+		text-decoration: underline;
+		cursor: pointer;
+		width: 50%;
+		text-align: right;
+	}
+	#metric 	
+	{
+		left: 0;
+		text-align: left;
+	}
+	#dial
+	{
+		width: 351px;
+		height: 226px;
+	}
+		#dial #needle
+		{
+			width: 6px;
+			height: 162px;
+			background: orange;
+			margin: 0 auto;
+			position: absolute;
+			top: 5px;
+			left: 50%;
+			margin: 0 0 0 -3px;
+			z-index: 2;
+			
+			-webkit-border-bottom-right-radius: 3px;
+			-webkit-border-bottom-left-radius: 3px;
+			-moz-border-radius-bottomright: 3px;
+			-moz-border-radius-bottomleft: 3px;
+			border-bottom-right-radius: 3px;
+			border-bottom-left-radius: 3px;
+			
+			-moz-box-shadow: 1px 1px 3px #ffd712, -1px -1px 3px #feb018;
+			-webkit-box-shadow: 1px 1px 3px #ffd712, -1px -1px 3px #feb018;
+			
+			-moz-transform: rotate(-105deg);
+			-moz-transform-origin: 50% 100%;
+			-webkit-transform: rotate(-105deg);
+			-webkit-transform-origin: 50% 100%;
+			-o-transform: rotate(-105deg);
+			-o-transform-origin: 50% 100%;
+			transform: rotate(-105deg);
+			transform-origin: 50% 100%;
+			
+			-webkit-animation-name: speedorgo;
+			-webkit-animation-duration: 2s;
+		}
+		
+#appmode #speedo
+{
+	margin: 40px auto 0;
+}
+#appmode #info
+{
+	padding: 40px 20px 20px;
+}
+#appmode .tidbit { display: none; }
+
+/* Portrait */
+@media screen and (max-width: 320px) {
+	#speedo { display: none; }
+	#info { display: block; }
+}
+/* Landscape */
+@media screen and (min-width: 321px) and (max-width: 480px) {
+	#speedo { display: block; }
+	#info { display: none; }
+}
+
+/* Portrait */
+@media screen and (orientation: portrait) {
+	#speedo { display: none; }
+	#info { display: block; }
+}
+/* Landscape */
+@media screen and (orientation: landscape) {
+	#speedo { display: block; }
+	#info { display: none; }
+}
+		
+@-webkit-keyframes speedorgo {
+  0%   { -webkit-transform: rotate(-105deg); }
+  20%  { -webkit-transform: rotate(41deg); }
+  100% { -webkit-transform: rotate(-105deg); }
+}

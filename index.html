@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html manifest="pocketspeedo.manifest" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<meta name="author" content="The CSS Ninja" />
+	<meta name="keywords" content="Css, CSS Ninja, The CSS Ninja, Javascript, Web, xhtml, html, html5, browsers, javascript, cascading style sheets" />
+	<meta name="description" content="Create a realtime speedometer in the iPhone browser using the geolocation API, CSS3 transitions and transforms with offline support using the application Cache." />
+	<meta name="robots" content="all" />
+	<meta name="copyright" content="The CSS Ninja" />
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="apple-touch-icon" href="gr_icon.png" />
+	<meta content="yes" name="apple-mobile-web-app-capable"/>
+	<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+	
+	<link rel="stylesheet" type="text/css" href="_styles.css" media="screen" />
+	
+	<title>Is that a speedo in your pocket? | The CSS Ninja</title>
+
+</head>
+<body class="fast">
+	
+	<div id="info">
+		<h1>Pocket Speedo</h1>
+		
+		<img src="screenshot.jpg" width="280" height="150" alt="Screenshot of the speedo web app" />
+		
+		<p>Is that a speedo in your pocket? Why yes it is. Rotate me to landscape mode and allow GPS access to see how fast you're moving.</p>
+		
+		<p class="tidbit">Add me to your home screen by touching the plus (+)</p>
+	</div>
+	
+	<div id="speedo">
+		<span id="mode">Slower?</span>
+		<span id="metric">MPH?</span>
+		
+		<div id="dial">
+			<div id="needle">&nbsp;</div>
+		</div>
+		
+		<p id="speed"></p>
+		
+	</div>
+	
+	<script type="text/javascript">
+		/*
+		 * Pocket Speedo v1
+		 * http://www.thecssninja.com/javascript/pocket-speedo
+		 * Copyright (c) 2010 Ryan Seddon 
+		 * released under the MIT License
+		*/
+		var TCNPS = TCNPS || {};
+		
+		(function () {
+			var webappCache = window.applicationCache,
+				body = document.getElementsByTagName("body")[0],
+				needle = document.getElementById("needle"),
+				speedVal = document.getElementById("speed"),
+				mode = document.getElementById("mode"),
+				metric = document.getElementById("metric"),
+				isMetric = true;
+			
+			TCNPS.getSpeed = function(pos) {
+				TCNPS.updateStats(pos);
+				
+				coordsListener = navigator.geolocation.watchPosition(TCNPS.updateStats, TCNPS.handleError);
+			};
+			TCNPS.updateStats = function(pos) {
+				var speed = pos.coords.speed,
+					speedVariation = TCNPS.speedVariation || 3.6, // KM is metres * 3.6; Miles is metres * 2.237 
+					currentSpeed = Math.round(speed*speedVariation),
+					angleVariation = TCNPS.angleVariation || 0.8,
+					initSpeedAngle = -105,
+					speedAngle = initSpeedAngle + (currentSpeed * angleVariation);
+					
+				TCNPS.angleVariation = angleVariation;
+				
+				console.log(currentSpeed);
+				console.log(speedAngle);
+				console.log(angleVariation);
+				console.log(speedVariation);
+				
+				needle.style.webkitTransitionDuration = '500ms';
+				needle.style.webkitTransform = "rotate(" + speedAngle + "deg)";
+				speedVal.textContent = currentSpeed + ((isMetric) ? "km/h" : "mph");
+			};
+			TCNPS.handleError = function(error) {
+				alert("Something has gone wrong in getting your location");
+			};
+			
+			TCNPS.changeTravelMode = function() {
+				if(body.className === "fast") {
+					body.className = "slow";
+					mode.textContent = "Faster?";
+					TCNPS.angleVariation = 8;
+				} else {
+					body.className = "fast";
+					mode.textContent = "Slower?";
+					TCNPS.angleVariation = 0.8;
+				}
+			};
+			
+			TCNPS.isMetric = function() {
+				if(isMetric) {
+					TCNPS.speedVariation = 2.237;
+					metric.textContent = "KM/H?";
+					isMetric = false;
+				} else {
+					TCNPS.speedVariation = 3.6;
+					metric.textContent = "MPH?";
+					isMetric = true;
+				}
+			};
+
+			TCNPS.updateCache = function()
+			{
+				webappCache.swapCache();
+				console.log("Cache has been updated due to a change found in the manifest");
+			};
+			TCNPS.errorCache = function(error)
+			{
+				console.log("You're either offline or something has gone horribly wrong.");
+			};
+			
+			if(navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(TCNPS.getSpeed, TCNPS.handleError);
+			} else {
+				alert("Browser does not support geolocation object");
+			}
+			
+			if(navigator.standalone) {
+				document.getElementsByTagName("body")[0].id = "appmode";
+			}
+
+			mode.addEventListener("click", TCNPS.changeTravelMode, false);
+			metric.addEventListener("click", TCNPS.isMetric, false);
+			webappCache.addEventListener("updateready", TCNPS.updateCache, false);
+			webappCache.addEventListener("error", TCNPS.errorCache, false);
+		})();
+	</script>
+		
+	<!-- Google analytics -->
+	<script type="text/javascript">
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+		var pageTracker = _gat._getTracker("UA-4638292-1");
+		pageTracker._initData();
+		pageTracker._trackPageview();
+	</script>
+	
+</body>
+</html>

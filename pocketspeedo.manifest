@@ -1,0 +1,16 @@
+CACHE MANIFEST
+
+# Offline cache v1.11
+# html files
+index.html
+
+# css files
+_styles.css
+
+# images
+gr_icon.png
+gr_speedo.jpg
+screenshot.jpg
+
+NETWORK:
+http://www.google-analytics.com/
